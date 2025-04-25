@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COPBOT - Tamil Nadu Police Assistant</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2c3e50">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-container {
+            width: 95%;
+            max-width: 800px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 1rem;
+            background-color: var(--primary);
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .header-logo img {
+            height: 60px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+
+/* Add to your existing styles */
+.emergency-contact {
+    background-color: #fff8f8;
+    border-left: 4px solid #e74c3c;
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+body.dark-mode .emergency-contact {
+    background-color: #2a1a1a;
+    border-left-color: #ff6b6b;
+}
+
+.law-item {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-left: 4px solid #3498db;
+    margin-bottom: 12px;
+    border-radius: 4px;
+}
+
+body.dark-mode .law-item {
+    background-color: #1a2a3a;
+    border-left-color: #4dabf7;
+}
+
+.fir-method {
+    background-color: #f0f8ff;
+    padding: 12px;
+    border-left: 4px solid #2ecc71;
+    margin-bottom: 12px;
+    border-radius: 4px;
+}
+
+body.dark-mode .fir-method {
+    background-color: #1a2a2a;
+    border-left-color: #51cf66;
+}
+
+.call-btn {
+    background-color: #e74c3c;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.call-btn:hover {
+    background-color: #c0392b;
+}
+
+.call-btn i {
+    font-size: 0.8em;
+}
+
+        .header-logo:hover img {
+            transform: scale(1.05);
+        }
+
+        #chat-box {
+            flex: 1;
+            padding: 1.2rem;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            line-height: 1.5;
+            position: relative;
+            word-wrap: break-word;
+            transition: all 0.3s ease;
+        }
+
+        .user-message {
+            background-color: var(--accent);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: white;
+            color: var(--dark);
+            align-self: flex-start;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            padding: 10px 16px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            border: 1px solid #e0e0e0;
+            align-self: flex-start;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            animation: typing 1s infinite;
+        }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .input-area {
+            display: flex;
+            padding: 1rem;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #send-btn {
+            margin-left: 12px;
+            padding: 0 20px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        #send-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .file-upload {
+            margin-right: 12px;
+        }
+
+        .file-upload label {
+            cursor: pointer;
+            padding: 10px;
+            color: var(--accent);
+            transition: color 0.3s ease;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 1rem;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            color: var(--dark);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background-color: #dfe6e9;
+        }
+
+        /* Location Button */
+        .location-btn {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            will-change: transform;
+        }
+
+        .location-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            background-color: #2980b9;
+        }
+
+        .station-info {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .emergency-contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
+        }
+
+        .emergency-contact:hover {
+            background-color: rgba(0,0,0,0.03);
+        }
+
+        .contact-name {
+            font-weight: bold;
+        }
+
+        .call-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .call-btn:hover {
+            background-color: #219653;
+            transform: scale(1.05);
+        }
+
+        .call-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* File preview styles */
+        .file-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+
+        .file-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Install button */
+        .install-btn {
+            position: fixed;
+            bottom: 130px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .install-btn:hover {
+            background-color: #219653;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .chat-container {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .header {
+            background-color: #0d1b2a;
+        }
+
+        body.dark-mode #chat-box {
+            background-color: #121212;
+        }
+
+        body.dark-mode .bot-message {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border-color: #444;
+        }
+
+        body.dark-mode .typing-indicator {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+
+        body.dark-mode .input-area,
+        body.dark-mode .controls {
+            background-color: #1e1e1e;
+            border-color: #444;
+        }
+
+        body.dark-mode #user-input {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border-color: #444;
+        }
+
+        body.dark-mode .file-upload label {
+            color: #4dabf7;
+        }
+
+        body.dark-mode .control-btn {
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .control-btn:hover {
+            background-color: #444;
+        }
+
+        body.dark-mode .location-btn {
+            background-color: #4dabf7;
+        }
+
+        body.dark-mode .station-info {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+
+        body.dark-mode .file-info {
+            color: #aaa;
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .controls {
+                padding: 0.6rem;
+            }
+            
+            .control-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .location-btn, .install-btn {
+                bottom: 70px;
+                right: 15px;
+                left: auto;
+                transform: none;
+                width: auto;
+                height: auto;
+            }
+            
+            .install-btn {
+                bottom: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <div class="header-logo">
+                <img src="static/tamilnadu-police-seeklogo.png" alt="Tamil Nadu Police">
+            </div>
+            <div class="header-text">
+                <h1>COPBOT</h1>
+                <p>Tamil Nadu Police Virtual Assistant</p>
+            </div>
+        </div>
+        
+        <div id="chat-box"></div>
+        
+        <div class="input-area">
+            <div class="file-upload">
+                <label for="file-input">
+                    <i class="fas fa-paperclip"></i>
+                    <input type="file" id="file-input" accept=".pdf,.png,.jpg,.jpeg" hidden>
+                </label>
+            </div>
+            <input type="text" id="user-input" placeholder="Type your question here..." autocomplete="off">
+            <button id="send-btn">Send <i class="fas fa-paper-plane"></i></button>
+        </div>
+        
+        <div class="controls">
+            <button id="theme-toggle" class="control-btn">
+                <i class="fas fa-moon"></i> Dark Mode
+            </button>
+            <button id="clear-chat" class="control-btn">
+                <i class="fas fa-trash-alt"></i> Clear Chat
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Action Buttons -->
+    <button id="location-btn" class="location-btn">
+        <i class="fas fa-map-marker-alt"></i> Find Nearest Police Station
+    </button>
+    
+    <button id="install-btn" class="install-btn">
+        <i class="fas fa-download"></i> Install COPBOT
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatBox = document.getElementById('chat-box');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const fileInput = document.getElementById('file-input');
+            const themeToggle = document.getElementById('theme-toggle');
+            const clearChatBtn = document.getElementById('clear-chat');
+            const locationBtn = document.getElementById('location-btn');
+            const installBtn = document.getElementById('install-btn');
+
+            // Initial greeting
+            addMessage("Hello! I am COPBOT, your Tamil Nadu Police virtual assistant. How can I help you?", false);
+
+            // Initialize theme from localStorage
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+            }
+
+            // Message handling
+            function addMessage(content, isUser) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', isUser ? 'user-message' : 'bot-message');
+                messageDiv.innerHTML = content.replace(/\n/g, '<br>');
+                chatBox.appendChild(messageDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+function handleChatResponse(response) {
+    const chatDiv = document.getElementById('chat-box');
+    
+    if (response.type === 'emergency_contacts') {
+        const contacts = response.response.split('<br>')
+            .filter(item => item.includes('<b>') && item.includes('</b>'))
+            .map(item => {
+                const parts = item.split('<br>');
+                const name = parts[0].replace('<b>', '').replace('</b>', '').split(':')[0].trim();
+                const number = parts[0].match(/<b>.*?<\/b>:\s*([^<br>]*)/)[1].trim();
+                const description = parts[1] || '';
+                return { name, number, description };
+            });
+
+        let contactsHTML = '<div><b>Emergency Contacts:</b>';
+        contacts.forEach(contact => {
+            contactsHTML += `
+                <div class="emergency-contact">
+                    <div>
+                        <span class="contact-name">${contact.name}</span>
+                        <div>${contact.number}</div>
+                        ${contact.description ? `<div class="contact-desc">${contact.description}</div>` : ''}
+                    </div>
+                    <a href="tel:${contact.number}" class="call-btn">
+                        <i class="fas fa-phone"></i> Call
+                    </a>
+                </div>
+            `;
+        });
+        contactsHTML += '</div>';
+        chatDiv.innerHTML += `<div class="bot-message">${contactsHTML}</div>`;
+    } 
+    else if (response.type === 'fir_info') {
+        chatDiv.innerHTML += `<div class="bot-message"><div class="info-box">${response.response}</div></div>`;
+    }
+    else if (response.type === 'laws_info') {
+        chatDiv.innerHTML += `<div class="bot-message"><div class="law-box">${response.response}</div></div>`;
+    }
+    else {
+        chatDiv.innerHTML += `<div class="bot-message">${response.response}</div>`;
+    }
+    
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+            // Typing indicator
+            function simulateTyping() {
+                const typingDiv = document.createElement('div');
+                typingDiv.classList.add('typing-indicator');
+                typingDiv.innerHTML = '<span></span><span></span><span></span>';
+                chatBox.appendChild(typingDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                return () => {
+                    if (typingDiv.parentNode === chatBox) {
+                        chatBox.removeChild(typingDiv);
+                    }
+                };
+            }
+
+            // File upload with preview
+            fileInput.addEventListener('change', async function() {
+                const file = this.files[0];
+                if (!file) return;
+
+                const cleanupTyping = simulateTyping();
+                
+                try {
+                    // Create preview
+                    const preview = await createFilePreview(file);
+                    addMessage(`<b>Uploading:</b> ${file.name}<br>${preview}`, true);
+                    
+                    // Prepare form data
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    // Send to server
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+
+                    if (data.error) {
+                        addMessage(`Upload failed: ${data.error}`, false);
+                    } else {
+                        let responseHtml = `<b>File uploaded successfully:</b> ${data.filename}<br>${preview}`;
+                        if (data.text_preview) {
+                            responseHtml += `<br><div class="file-info"><i>Extracted text:</i><br>${data.text_preview}</div>`;
+                        }
+                        addMessage(responseHtml, false);
+                    }
+                } catch (error) {
+                    addMessage("Upload failed. Try again later.", false);
+                    console.error("Upload error:", error);
+                } finally {
+                    cleanupTyping();
+                    fileInput.value = '';
+                }
+            });
+
+            // Create file preview
+            function createFilePreview(file) {
+                return new Promise((resolve) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            resolve(`<img src="${e.target.result}" class="file-preview">`);
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (file.type === 'application/pdf') {
+                        resolve('<i class="fas fa-file-pdf" style="font-size: 48px; color: #e74c3c;"></i>');
+                    } else {
+                        resolve('<i class="fas fa-file-alt" style="font-size: 48px;"></i>');
+                    }
+                });
+            }
+
+            // Send message
+           async function sendMessage() {
+    const query = userInput.value.trim();
+    if (!query) return;
+
+    addMessage(query, true);
+    userInput.value = '';
+    sendBtn.disabled = true;
+
+    const cleanupTyping = simulateTyping();
+
+    try {
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query })
+        });
+        
+        if (!response.ok) throw new Error('Network response was not ok');
+        
+        const data = await response.json();
+        handleChatResponse(data);
+    } catch (error) {
+        addMessage("Sorry, I couldn't process your request. Please try again later.", false);
+        console.error("Chat error:", error);
+    } finally {
+        cleanupTyping();
+        sendBtn.disabled = false;
+    }
+}
+
+            // Theme toggle
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                
+                // Update meta theme color
+                const themeColor = document.querySelector('meta[name="theme-color"]');
+                themeColor.content = isDark ? '#121212' : '#2c3e50';
+                
+                // Update button icon
+                const icon = themeToggle.querySelector('i');
+                if (isDark) {
+                    icon.classList.replace('fa-moon', 'fa-sun');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+                } else {
+                    icon.classList.replace('fa-sun', 'fa-moon');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+                }
+            });
+
+            // Clear chat
+            clearChatBtn.addEventListener('click', () => {
+                chatBox.innerHTML = '';
+                addMessage("Hello! I'm COPBOT, your Tamil Nadu Police virtual assistant. How can I help you today?", false);
+            });
+
+            // Location button - find nearest police station
+            locationBtn.addEventListener('click', async () => {
+                const cleanupTyping = simulateTyping();
+                
+                try {
+                    // Get user location
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 0
+                        });
+                    });
+                    
+                    const { latitude: lat, longitude: lng } = position.coords;
+                    
+                    // Send to server to find nearest station
+                    const response = await fetch('/nearest-station', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ lat, lng })
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to find stations');
+                    
+                    const data = await response.json();
+                    
+                    if (data.error) throw new Error(data.error);
+                    
+                    // Display station info
+                    addMessage(`
+                        <div class="station-info">
+                            <b>Nearest Police Station:</b> ${data.station}<br>
+                            <b>Distance:</b> ${data.distance}<br>
+                            <b>Phone:</b> <a href="tel:${data.phone}">${data.phone}</a><br>
+                            <a href="${data.map_url}" target="_blank">View on Map</a>
+                        </div>
+                    `, false);
+                    
+                } catch (error) {
+                    let errorMessage = "Couldn't find nearby stations. ";
+                    if (error.code === error.PERMISSION_DENIED) {
+                        errorMessage += "Please enable location access in your browser settings.";
+                    } else {
+                        errorMessage += "Please try again later.";
+                    }
+                    addMessage(errorMessage, false);
+                    console.error("Location error:", error);
+                } finally {
+                    cleanupTyping();
+                }
+            });
+
+// Replace your existing handleChatResponse function with this:
+function handleChatResponse(response) {
+    const chatBox = document.getElementById('chat-box');
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', 'bot-message');
+    
+    // Create a container for the HTML content
+    const contentContainer = document.createElement('div');
+    
+    // Different handling based on response type
+    if (response.type === 'emergency_contacts') {
+        contentContainer.innerHTML = response.response;
+        // Add click handlers for call buttons
+        contentContainer.querySelectorAll('.call-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Call button already has tel: link
+            });
+        });
+    } 
+    else if (response.type === 'laws_info' || response.type === 'fir_info') {
+        contentContainer.innerHTML = response.response;
+    }
+    else {
+        // Regular text message
+        contentContainer.textContent = response.response;
+    }
+    
+    messageDiv.appendChild(contentContainer);
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+            // Event listeners
+            sendBtn.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            // Hide location button if geolocation not supported
+            if (!navigator.geolocation) {
+                locationBtn.style.display = 'none';
+            }
+
+            // PWA Installation prompt
+            let deferredPrompt;
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'flex';
+                
+                installBtn.addEventListener('click', () => {
+                    installBtn.style.display = 'none';
+                    deferredPrompt.prompt();
+                    
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted install');
+                        } else {
+                            console.log('User dismissed install');
+                        }
+                        deferredPrompt = null;
+                    });
+                });
+            });
+            
+            // Check if app is already installed
+            window.addEventListener('appinstalled', () => {
+                installBtn.style.display = 'none';
+                console.log('COPBOT was installed');
+            });
+
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            console.log('ServiceWorker registration successful');
+                        })
+                        .catch(err => {
+                            console.log('ServiceWorker registration failed: ', err);
+                        });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
